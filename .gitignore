@@ -1,0 +1,24 @@
+# Python
+venv/
+__pycache__/
+*.py[cod]
+
+# Secrets
+.streamlit/secrets.toml
+config.py
+.env
+
+# System
+.DS_Store
+
+# Data files (optional)
+data/*.csv
+data/*.json
+
+# Jupyter notebooks
+*.ipynb
+*.ipynb_checkpoints
+
+# IDE files
+.idea/
+.vscode/
