@@ -18,17 +18,19 @@ st.set_page_config(
     layout="wide"
 )
 
-# Custom Arabic font and styles
+# Enhanced Arabic font and styles
 st.markdown("""
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Tajawal&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap');
 html, body, [class*="css"] {
     font-family: 'Tajawal', sans-serif;
     direction: rtl;
+    text-align: right;
 }
 #MainMenu {visibility: hidden;}
 footer {visibility: hidden;}
 .stDeployButton {display:none;}
+.stMap {border-radius: 10px;}
 </style>
 """, unsafe_allow_html=True)
 
@@ -196,19 +198,31 @@ def main():
                 except ValueError as e:
                     st.error(str(e))
             
-            # Physical station locations
+            # Fixed Map Visualization
             st.subheader("أفضل مواقع لمحطات الاستمطار")
             station_data = {
                 "الموقع": ["الكوت", "النعمانية", "الصويرة"],
                 "خط العرض": [32.51, 32.57, 32.92],
                 "خط الطول": [45.82, 45.30, 44.47],
-                "النوع": ["صناعي", "زراعي", "سكني"]
+                "النوع": ["صناعي", "زراعي", "سكني"],
+                "لون": ["#FF0000", "#00AA00", "#0000FF"]  # Red, Green, Blue
             }
+            
+            # Display color legend in Arabic
+            st.markdown("""
+            <div style="text-align: right; margin-bottom: 20px;">
+            <strong>مفتاح الألوان:</strong><br>
+            <span style='color:#FF0000;font-size:20px'>■</span> صناعي<br>
+            <span style='color:#00AA00;font-size:20px'>■</span> زراعي<br>
+            <span style='color:#0000FF;font-size:20px'>■</span> سكني
+            </div>
+            """, unsafe_allow_html=True)
+            
             st.map(pd.DataFrame(station_data),
-                  latitude='خط العرض',
-                  longitude='خط الطول',
-                  size=1000,
-                  color='النوع')
+                 latitude='خط العرض',
+                 longitude='خط الطول',
+                 size=1000,
+                 color='لون')
         
         # Tab 3: FAQ
         with tab3:
