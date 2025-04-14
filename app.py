@@ -31,6 +31,7 @@ html, body, [class*="css"] {
 footer {visibility: hidden;}
 .stDeployButton {display:none;}
 .stMap {border-radius: 10px;}
+.mapboxgl-canvas {border-radius: 10px;}
 </style>
 """, unsafe_allow_html=True)
 
@@ -97,7 +98,7 @@ class WaterAI:
             - الحي: 7-10 صباحاً، 7-9 مساءً
             - بدرة: 8-11 صباحاً، 8-10 مساءً
             - النعمانية: 5-8 صباحاً، 5-7 مساءً
-            - الصويرة: 6:30-9:30 صباحاً، 6:30-8:30 مساءً""",
+            - الصويرة: 6:30-9:30 صباحاً， 6:30-8:30 مساءً""",
             
             "ترشيد الاستهلاك": """نصائح لترشيد المياه:
             - إصلاح التسريبات فوراً
@@ -198,31 +199,35 @@ def main():
                 except ValueError as e:
                     st.error(str(e))
             
-            # Fixed Map Visualization
+            # Fixed Map Visualization with Error Handling
             st.subheader("أفضل مواقع لمحطات الاستمطار")
-            station_data = {
-                "الموقع": ["الكوت", "النعمانية", "الصويرة"],
-                "خط العرض": [32.51, 32.57, 32.92],
-                "خط الطول": [45.82, 45.30, 44.47],
-                "النوع": ["صناعي", "زراعي", "سكني"],
-                "لون": ["#FF0000", "#00AA00", "#0000FF"]  # Red, Green, Blue
-            }
-            
-            # Display color legend in Arabic
-            st.markdown("""
-            <div style="text-align: right; margin-bottom: 20px;">
-            <strong>مفتاح الألوان:</strong><br>
-            <span style='color:#FF0000;font-size:20px'>■</span> صناعي<br>
-            <span style='color:#00AA00;font-size:20px'>■</span> زراعي<br>
-            <span style='color:#0000FF;font-size:20px'>■</span> سكني
-            </div>
-            """, unsafe_allow_html=True)
-            
-            st.map(pd.DataFrame(station_data),
-                 latitude='خط العرض',
-                 longitude='خط الطول',
-                 size=1000,
-                 color='لون')
+            try:
+                station_data = {
+                    "الموقع": ["الكوت", "النعمانية", "الصويرة"],
+                    "خط العرض": [32.51, 32.57, 32.92],
+                    "خط الطول": [45.82, 45.30, 44.47],
+                    "النوع": ["صناعي", "زراعي", "سكني"],
+                    "لون": ["#FF5733", "#33FF57", "#3357FF"]  # Custom colors
+                }
+                
+                st.markdown("""
+                <div style="text-align: right; margin: 15px 0;">
+                <strong>مفتاح الألوان:</strong><br>
+                <span style='color:#FF5733;font-size:20px'>■</span> صناعي<br>
+                <span style='color:#33FF57;font-size:20px'>■</span> زراعي<br>
+                <span style='color:#3357FF;font-size:20px'>■</span> سكني
+                </div>
+                """, unsafe_allow_html=True)
+                
+                st.map(pd.DataFrame(station_data),
+                      latitude='خط العرض',
+                      longitude='خط الطول',
+                      size=1000,
+                      color='لون')
+            except Exception as e:
+                st.error("حدث خطأ في عرض الخريطة. يرجى المحاولة لاحقاً")
+                if st.secrets.get("DEBUG", False):
+                    st.exception(e)
         
         # Tab 3: FAQ
         with tab3:
